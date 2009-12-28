@@ -5,12 +5,22 @@ use File::Spec::Functions;
 use File::Temp qw(tempfile);
 use IO::File;
 our @ISA       = qw(Exporter);
-our @EXPORT_OK = qw(compress decompress);
+our @EXPORT_OK = qw(compress_fast compress compress_best decompress);
 our $VERSION   = '0.35';
+
+sub compress_fast ($) {
+    my $data = shift;
+    return _call( $data, 'data.txt', 'lzma -c --fast -f' );
+}
 
 sub compress ($) {
     my $data = shift;
     return _call( $data, 'data.txt', 'lzma -c -f' );
+}
+
+sub compress_best ($) {
+    my $data = shift;
+    return _call( $data, 'data.txt', 'lzma -c --best -f' );
 }
 
 sub decompress ($) {
@@ -24,7 +34,7 @@ sub _call {
     my $path = catfile( $dir, $filename );
     my $fh   = IO::File->new("> $path") || die "Error opening $path: $!";
     $fh->print($in) || die "Error writing to $path: $!";
-    $fh->close      || die "Error closing $path: $!";
+    $fh->close || die "Error closing $path: $!";
     $fh = IO::File->new("$command $path |") || die "Error opening lzma: $!";
     my $out;
 
@@ -49,6 +59,10 @@ Compress::LZMA::External - Compress and decompress using LZMA
   my $compressed = compress($raw_data);
   my $decompressed = decompress($compressed_data);
 
+  # you can also export these:
+  my $compressed_fast = compress_fast($raw_data);
+  my $compressed_best = compress_best($raw_data);
+
 =head1 DESCRIPTION
 
 The Lempel-Ziv-Markov chain-Algorithm (LZMA) is an data compression
@@ -65,7 +79,7 @@ Leon Brocard <acme@astray.com>.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2008, Leon Brocard
+Copyright (C) 2008-9, Leon Brocard
 
 =head1 LICENSE
 

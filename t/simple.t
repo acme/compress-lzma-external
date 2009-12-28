@@ -1,14 +1,24 @@
 #!perl
 use strict;
 use warnings;
-use Test::More tests => 3;
-use Compress::LZMA::External qw(compress decompress);
+use Test::More tests => 9;
+use Compress::LZMA::External
+    qw(compress_fast compress_best compress decompress);
 
 my $data = 'X' x 1000;
 
-my $compressed = compress($data);
-is( length($compressed), 25 );
+foreach my $subroutine (qw(compress_fast compress compress_best)) {
+    my $compressed;
+    {
+        no strict 'refs';
+        $compressed = &{$subroutine}($data);
+    }
+    is( length($compressed), 25, "$subroutine compresses" );
 
-my $uncompressed = decompress($compressed);
-is( length($uncompressed), 1000 );
-is( $uncompressed, $data );
+    my $uncompressed = decompress($compressed);
+    is( length($uncompressed), 1000,
+        "decompressed $subroutine-compressed data has correct length" );
+    is( $uncompressed, $data,
+        "decompressed $subroutine-compressed data has correct data" );
+}
+

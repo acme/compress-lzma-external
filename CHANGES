@@ -1,5 +1,8 @@
 CHANGES file for Compress::LZMA::External:
 
+0.36
+  - add compress_fast and compress_best as suggested by Brian Szymanski
+
 0.35 Wed Sep 10 20:53:41 BST 2008
   - add machine- and human-readable license
 
