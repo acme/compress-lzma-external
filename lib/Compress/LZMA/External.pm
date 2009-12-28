@@ -6,7 +6,7 @@ use File::Temp qw(tempfile);
 use IO::File;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(compress_fast compress compress_best decompress);
-our $VERSION   = '0.35';
+our $VERSION   = '0.36';
 
 sub compress_fast ($) {
     my $data = shift;
