@@ -1,5 +1,8 @@
 CHANGES file for Compress::LZMA::External:
 
+0.37
+  - be flexible on compression test
+
 0.36 Mon Dec 28 12:30:25 CET 2009
   - add compress_fast and compress_best as suggested by Brian Szymanski
 
